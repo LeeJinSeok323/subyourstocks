@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    options {
+        disableConcurrentBuilds(abortPrevious: true)
+    }
+
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                deleteDir()
+                git branch: 'main',
+                    url: 'https://github.com/LeeJinSeok323/subyourstocks.git'
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                sh 'docker build --no-cache -t stocker-frontend:latest ./frontend'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker network create stocker-net 2>/dev/null || true
+
+                    docker rm -f stocker-frontend || true
+
+                    docker run -d \
+                        --name stocker-frontend \
+                        --network stocker-net \
+                        --restart always \
+                        -v /etc/localtime:/etc/localtime:ro \
+                        -v /etc/timezone:/etc/timezone:ro \
+                        -p 3000:80 \
+                        stocker-frontend:latest
+                '''
+            }
+        }
+    }
+
+    post {
+        success { echo 'stocker-frontend 배포 완료' }
+        failure { echo 'stocker-frontend 배포 실패' }
+    }
+}

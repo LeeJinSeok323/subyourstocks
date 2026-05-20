@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+
+    environment {
+        MYSQL_HOST       = '172.17.0.1'
+        MYSQL_PORT       = '3307'
+        MYSQL_USER       = 'jinseoki'
+        CLICKHOUSE_HOST  = '172.17.0.1'
+        CLICKHOUSE_PORT  = '3308'
+        CLICKHOUSE_USER  = 'jinseoki'
+        SERVER_PORT      = '8081'
+        TZ               = 'Asia/Seoul'
+
+        MYSQL_PASSWORD      = credentials('DB_PASSWORD')
+        CLICKHOUSE_PASSWORD = credentials('clickhouse-password')
+    }
+
+    options {
+        disableConcurrentBuilds(abortPrevious: true)
+    }
+
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                deleteDir()
+                git branch: 'main',
+                    url: 'https://github.com/LeeJinSeok323/subyourstocks.git'
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                sh 'docker build --no-cache -t stocker-backend:latest ./backend'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker network create stocker-net 2>/dev/null || true
+
+                    docker rm -f stocker-backend || true
+
+                    docker run -d \
+                        --name stocker-backend \
+                        --network stocker-net \
+                        --restart always \
+                        -v /etc/localtime:/etc/localtime:ro \
+                        -v /etc/timezone:/etc/timezone:ro \
+                        -e TZ=${TZ} \
+                        -e MYSQL_HOST=${MYSQL_HOST} \
+                        -e MYSQL_PORT=${MYSQL_PORT} \
+                        -e MYSQL_USER=${MYSQL_USER} \
+                        -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+                        -e CLICKHOUSE_HOST=${CLICKHOUSE_HOST} \
+                        -e CLICKHOUSE_PORT=${CLICKHOUSE_PORT} \
+                        -e CLICKHOUSE_USER=${CLICKHOUSE_USER} \
+                        -e CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD} \
+                        -e SERVER_PORT=${SERVER_PORT} \
+                        -p 8081:8081 \
+                        stocker-backend:latest
+                '''
+            }
+        }
+    }
+
+    post {
+        success { echo 'stocker-backend 배포 완료' }
+        failure { echo 'stocker-backend 배포 실패' }
+    }
+}
