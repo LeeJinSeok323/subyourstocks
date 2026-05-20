@@ -8,7 +8,7 @@ pipeline {
         CLICKHOUSE_HOST  = '172.17.0.1'
         CLICKHOUSE_PORT  = '3308'
         CLICKHOUSE_USER  = 'jinseoki'
-        SERVER_PORT      = '8081'
+        SERVER_PORT      = '8082'
         TZ               = 'Asia/Seoul'
 
         MYSQL_PASSWORD      = credentials('DB_PASSWORD')
@@ -61,7 +61,7 @@ pipeline {
                         -e CLICKHOUSE_USER=${CLICKHOUSE_USER} \
                         -e CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD} \
                         -e SERVER_PORT=${SERVER_PORT} \
-                        -p 8081:8081 \
+                        -p 8082:8082 \
                         stocker-backend:latest
                 '''
             }
