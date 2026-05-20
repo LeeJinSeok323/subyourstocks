@@ -1,0 +1,120 @@
+.dashboard {
+  max-width: 1400px;
+}
+
+.dashboard__title {
+  margin-bottom: 20px;
+}
+
+.dashboard__title h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.dashboard__title p {
+  font-size: 13px;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+
+.dashboard__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.dashboard__report-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-2);
+  background: var(--surface);
+  transition: background 0.15s;
+}
+
+.dashboard__report-btn:hover {
+  background: var(--bg);
+}
+
+/* Widget wrapper (draggable) */
+.widget {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.widget--dragging {
+  box-shadow: var(--shadow-md);
+  opacity: 0.95;
+  border-color: var(--primary);
+}
+
+.widget__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: #FAFAFA;
+  min-height: 40px;
+}
+
+.widget__drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+  cursor: grab;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+  touch-action: none;
+}
+
+.widget__drag-handle:hover {
+  color: var(--text-2);
+  background: var(--border);
+}
+
+.widget__drag-handle:active {
+  cursor: grabbing;
+}
+
+.widget__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  flex: 1;
+}
+
+.widget__lock-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  color: var(--text-3);
+  transition: color 0.15s, background 0.15s;
+}
+
+.widget__lock-btn:hover {
+  color: var(--text-1);
+  background: var(--border);
+}
+
+.widget__lock-btn--locked {
+  color: var(--primary);
+}
+
+.widget__body {
+  padding: 0;
+}

@@ -1,0 +1,131 @@
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  height: var(--header-height);
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-1);
+  flex-shrink: 0;
+}
+
+.sidebar__logo-icon {
+  color: var(--primary);
+}
+
+.sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sidebar__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.sidebar__username {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-1);
+}
+
+.sidebar__date {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 1px;
+}
+
+.sidebar__nav {
+  flex: 1;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.sidebar__nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  font-size: 13.5px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar__nav-item:hover {
+  background: var(--bg);
+  color: var(--text-1);
+}
+
+.sidebar__nav-item--active {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.sidebar__nav-item--active .sidebar__nav-icon {
+  color: var(--primary);
+}
+
+.sidebar__nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--text-3);
+}
+
+.sidebar__nav-item--active .sidebar__nav-icon {
+  color: var(--primary);
+}
+
+.sidebar__footer {
+  padding: 12px 10px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sidebar__settings {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  font-size: 13.5px;
+  width: 100%;
+  transition: background 0.15s;
+}
+
+.sidebar__settings:hover {
+  background: var(--bg);
+  color: var(--text-1);
+}

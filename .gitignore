@@ -17,3 +17,7 @@ frontend/.env
 # Env
 .env
 backend/.env
+
+# Claude
+.claude/
+CLAUDE.md
