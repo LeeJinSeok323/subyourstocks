@@ -16,12 +16,16 @@ public class ScreeningController {
     private final ScreeningService screeningService;
 
     @GetMapping("/price")
-    public List<Map<String, Object>> screenByPrice(
+    public Object screenByPrice(
             @RequestParam(defaultValue = "20") int days,
             @RequestParam(defaultValue = "10.0") double minChangePercent,
             @RequestParam(defaultValue = "50") int limit
     ) {
-        return screeningService.screenByPriceChange(days, minChangePercent, limit);
+        try {
+            return screeningService.screenByPriceChange(days, minChangePercent, limit);
+        } catch (Exception e) {
+            return Map.of("error", e.getMessage(), "cause", e.getCause() != null ? e.getCause().getMessage() : "");
+        }
     }
 
     @GetMapping("/volume")

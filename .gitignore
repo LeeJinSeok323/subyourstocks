@@ -16,3 +16,4 @@ frontend/.env
 
 # Env
 .env
+backend/.env
