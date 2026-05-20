@@ -69,7 +69,10 @@ pipeline {
     }
 
     post {
-        success { echo 'stocker-backend 배포 완료' }
+        success {
+            echo 'stocker-backend 배포 완료'
+            build job: 'stocker-frontend', wait: false
+        }
         failure { echo 'stocker-backend 배포 실패' }
     }
 }
