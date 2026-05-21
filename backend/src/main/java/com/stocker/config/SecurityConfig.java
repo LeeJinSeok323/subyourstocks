@@ -63,8 +63,8 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of(
             "http://localhost:4000",
             "http://localhost:*",
-            "https://100억부자.서버.한국",
-            "https://xn--100-of5ek37expa819a.xn--3e0b707e2ira.xn--3e0b707e"  // IDN 퓨니코드 (혹시 모를 경우 대비)
+            "https://100억클럽.서버.한국",
+            "https://xn--100-pn7mx26cvgp.xn--hk3b17f.xn--3e0b707e"  // IDN 퓨니코드
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
