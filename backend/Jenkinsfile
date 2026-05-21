@@ -13,6 +13,8 @@ pipeline {
 
         MYSQL_PASSWORD      = credentials('DB_PASSWORD')
         CLICKHOUSE_PASSWORD = credentials('clickhouse-password')
+        JWT_SECRET          = credentials('JWT_SECRET')
+
     }
 
     options {
@@ -61,6 +63,7 @@ pipeline {
                         -e CLICKHOUSE_HOST=${CLICKHOUSE_HOST} \
                         -e CLICKHOUSE_PORT=${CLICKHOUSE_PORT} \
                         -e CLICKHOUSE_USER=${CLICKHOUSE_USER} \
+                        -e JWT_SECRET=${JWT_SECRET} \
                         -e CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD} \
                         -e SERVER_PORT=${SERVER_PORT} \
                         -p 8082:8082 \
