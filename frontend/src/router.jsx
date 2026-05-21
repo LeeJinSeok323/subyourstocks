@@ -7,6 +7,7 @@ import Portfolio   from './pages/Portfolio';
 import MarketTrend from './pages/MarketTrend';
 import Login       from './pages/Login';
 import Admin       from './pages/Admin';
+import NotFound    from './pages/NotFound';
 import { getToken, getRole } from './hooks/useAuth';
 
 /** JWT 없으면 /login 으로 리다이렉트 */
@@ -24,6 +25,9 @@ function RequireAdmin({ children }) {
 const router = createBrowserRouter([
   // 로그인 페이지 (레이아웃 없음)
   { path: '/login', element: <Login /> },
+
+  // 404
+  { path: '*', element: <NotFound /> },
 
   // 인증 필요 영역 (사이드바 + 헤더 레이아웃)
   {

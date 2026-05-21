@@ -118,3 +118,19 @@
 .widget__body {
   padding: 0;
 }
+
+/* 잠긴 위젯: 배경 살짝 다르게 */
+.widget--locked {
+  opacity: 0.92;
+}
+
+.widget--locked .widget__bar {
+  background: var(--bg);
+}
+
+/* 드래그 핸들 자리 확보 (잠긴 상태에서 레이아웃 유지) */
+.widget__drag-placeholder {
+  display: inline-block;
+  width: 23px;
+  flex-shrink: 0;
+}

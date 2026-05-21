@@ -53,7 +53,7 @@ public class SecurityConfig {
     /** 비밀번호 BCrypt 해싱 */
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(10);
     }
 
     /** CORS: Vite 개발 서버(5173) → 백엔드(8082) 허용 */
@@ -61,7 +61,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         var config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of(
-            "http://localhost:3000",
+            "http://localhost:4000",
             "http://localhost:*",
             "https://100억부자.서버.한국",
             "https://xn--100-of5ek37expa819a.xn--3e0b707e2ira.xn--3e0b707e"  // IDN 퓨니코드 (혹시 모를 경우 대비)
