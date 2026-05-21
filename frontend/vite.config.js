@@ -7,7 +7,7 @@ export default defineConfig({
     alias: { '@': '/src' },
   },
   server: {
-    port: 5173,
+    port: 3000,
     proxy: {
       '/api': 'http://localhost:8082',
     },

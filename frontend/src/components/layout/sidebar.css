@@ -53,6 +53,19 @@
   font-weight: 600;
   font-size: 13px;
   color: var(--text-1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar__admin-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--primary);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 10px;
+  letter-spacing: 0.02em;
 }
 
 .sidebar__date {
@@ -128,4 +141,13 @@
 .sidebar__settings:hover {
   background: var(--bg);
   color: var(--text-1);
+}
+
+.sidebar__logout:hover {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.sidebar__logout:hover .sidebar__nav-icon {
+  color: var(--red);
 }
