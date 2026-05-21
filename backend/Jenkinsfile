@@ -67,7 +67,7 @@ pipeline {
                         -e CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD} \
                         -e SERVER_PORT=${SERVER_PORT} \
                         -e JWT_SECRET=${JWT_SECRET} \
-                        -p 8082:8082 \
+                        -p 127.0.0.1:8082:8082 \
                         stocker-backend:latest
                 '''
             }
