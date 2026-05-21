@@ -3,6 +3,16 @@
   max-width: 960px;
 }
 
+@media (max-width: 768px) {
+  .admin-page { padding: 0; }
+  .admin-header { padding: 16px 16px 0; }
+  .admin-filters { padding: 0 16px; }
+  .admin-table-wrap { border-radius: 0; border-left: none; border-right: none; }
+  .admin-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .admin-table { min-width: 560px; }
+  .admin-loading, .admin-empty { border-radius: 0; border-left: none; border-right: none; }
+}
+
 /* ── 헤더 ── */
 .admin-header {
   display: flex;

@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, SlidersHorizontal, Star,
-  PieChart, TrendingUp, LineChart, LogOut, ShieldCheck,
+  PieChart, TrendingUp, LineChart, LogOut, ShieldCheck, X,
 } from 'lucide-react';
 import { getUser, getRole, clearAuth } from '../../hooks/useAuth';
 import './sidebar.css';
@@ -14,11 +14,11 @@ const NAV_ITEMS = [
   { to: '/market',     icon: TrendingUp,         label: '시장 동향' },
 ];
 
-export default function Sidebar() {
-  const navigate  = useNavigate();
-  const username  = getUser() ?? '사용자';
-  const role      = getRole();
-  const initial   = username.charAt(0).toUpperCase();
+export default function Sidebar({ isOpen, onClose }) {
+  const navigate = useNavigate();
+  const username = getUser() ?? '사용자';
+  const role     = getRole();
+  const initial  = username.charAt(0).toUpperCase();
 
   const now     = new Date();
   const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
@@ -28,18 +28,28 @@ export default function Sidebar() {
     navigate('/login', { replace: true });
   };
 
+  const handleNavClick = () => {
+    // 모바일에서 메뉴 클릭 시 드로어 닫기
+    if (onClose) onClose();
+  };
+
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${isOpen ? ' sidebar--open' : ''}`}>
       <div className="sidebar__logo">
         <LineChart size={20} className="sidebar__logo-icon" />
         <span>StockScreener</span>
+        {/* 모바일 닫기 버튼 */}
+        <button className="sidebar__close" onClick={onClose} aria-label="메뉴 닫기">
+          <X size={18} />
+        </button>
       </div>
 
       <div className="sidebar__user">
         <div className="sidebar__avatar">{initial}</div>
         <div>
           <div className="sidebar__username">
-            {username}님{role === 'ADMIN' && <span className="sidebar__admin-badge">관리자</span>}
+            {username}님
+            {role === 'ADMIN' && <span className="sidebar__admin-badge">관리자</span>}
           </div>
           <div className="sidebar__date">{dateStr}</div>
         </div>
@@ -51,6 +61,7 @@ export default function Sidebar() {
             key={to}
             to={to}
             end={to === '/'}
+            onClick={handleNavClick}
             className={({ isActive }) =>
               `sidebar__nav-item${isActive ? ' sidebar__nav-item--active' : ''}`
             }
@@ -60,10 +71,10 @@ export default function Sidebar() {
           </NavLink>
         ))}
 
-        {/* 관리자 전용 메뉴 */}
         {role === 'ADMIN' && (
           <NavLink
             to="/admin"
+            onClick={handleNavClick}
             className={({ isActive }) =>
               `sidebar__nav-item${isActive ? ' sidebar__nav-item--active' : ''}`
             }

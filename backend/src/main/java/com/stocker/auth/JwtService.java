@@ -24,11 +24,16 @@ public class JwtService {
 
     /** 로그인 성공 시 JWT 발급 (role 클레임 포함) */
     public String generateToken(String username, String role) {
+        return generateToken(username, role, expiration);
+    }
+
+    /** 자동 로그인용 — 만료 시간 직접 지정 */
+    public String generateToken(String username, String role, long customExpiration) {
         return Jwts.builder()
             .subject(username)
             .claim("role", role)
             .issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis() + expiration))
+            .expiration(new Date(System.currentTimeMillis() + customExpiration))
             .signWith(key)
             .compact();
     }

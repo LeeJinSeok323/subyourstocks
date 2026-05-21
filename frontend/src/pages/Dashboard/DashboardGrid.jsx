@@ -20,7 +20,7 @@ const Loading = () => (
 function LockedWidget({ widget, onToggleLock }) {
   const WidgetComponent = LAZY_WIDGETS[widget.id];
   return (
-    <div className="widget widget--locked">
+    <div className="widget widget--locked" data-widget-id={widget.id}>
       <div className="widget__bar">
         <span className="widget__drag-placeholder" />
         <span className="widget__label">{widget.label}</span>
@@ -61,6 +61,7 @@ function DraggableWidget({ widget, onToggleLock }) {
       ref={setNodeRef}
       style={style}
       className={`widget${isDragging ? ' widget--dragging' : ''}`}
+      data-widget-id={widget.id}
     >
       <div className="widget__bar">
         <button

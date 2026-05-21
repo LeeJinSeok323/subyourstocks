@@ -150,6 +150,26 @@
 }
 .login-textarea::placeholder { color: var(--text-3); }
 
+/* ── 자동 로그인 체크박스 ── */
+.login-remember {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--text-2);
+  cursor: pointer;
+  user-select: none;
+  margin: -4px 0;
+}
+
+.login-remember input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 /* ── 폼 에러 메시지 ── */
 .login-error {
   font-size: 12.5px;

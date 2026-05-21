@@ -2,6 +2,21 @@
   max-width: 1400px;
 }
 
+@media (max-width: 768px) {
+  .dashboard__title h1 { font-size: 18px; }
+
+  .dashboard__report-btn span { display: none; }
+  .dashboard__report-btn { padding: 7px 10px; }
+
+  /* 차트 위젯 모바일에서 숨기기 */
+  [data-widget-id="charts"] { display: none; }
+
+  /* 위젯 바 드래그 핸들 숨기기 (모바일에서 드래그 안 씀) */
+  .widget__drag-handle { display: none; }
+  .widget__drag-placeholder { display: none; }
+  .widget__bar { padding: 10px 14px; }
+}
+
 .dashboard__title {
   margin-bottom: 20px;
 }

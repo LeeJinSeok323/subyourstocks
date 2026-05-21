@@ -41,7 +41,11 @@ public class AuthService {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
-        String token = jwtService.generateToken(user.username(), user.role());
+        // 자동 로그인: 30일 / 일반: 24시간
+        long expiry = req.autoLogin()
+            ? 30L * 24 * 60 * 60 * 1000
+            :       24 * 60 * 60 * 1000;
+        String token = jwtService.generateToken(user.username(), user.role(), expiry);
         return new LoginResponse(token, user.username(), user.role());
     }
 

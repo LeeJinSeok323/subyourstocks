@@ -8,9 +8,9 @@
   border-left: 4px solid var(--warning);
 }
 
-.market-alert__icon { color: var(--warning); flex-shrink: 0; margin-top: 1px; }
+.market-alert__icon  { color: var(--warning); flex-shrink: 0; margin-top: 1px; }
 .market-alert__title { font-weight: 600; font-size: 13px; color: #92400E; }
-.market-alert__text { font-size: 13px; color: #78350F; margin-top: 2px; }
+.market-alert__text  { font-size: 13px; color: #78350F; margin-top: 2px; }
 
 /* ── MarketIndexCards ── */
 .index-cards {
@@ -51,7 +51,7 @@
   border-radius: 50%;
 }
 
-.index-card__arrow { color: var(--text-3); }
+.index-card__arrow  { color: var(--text-3); }
 
 .index-card__value {
   font-size: 22px;
@@ -69,11 +69,11 @@
   font-weight: 500;
 }
 
-.index-card__change--up { color: var(--green); }
+.index-card__change--up   { color: var(--green); }
 .index-card__change--down { color: var(--red); }
 .index-card__sub { font-size: 11px; color: var(--text-3); }
 
-/* ── Charts (Sector + Asset) ── */
+/* ── Charts ── */
 .charts-row {
   display: grid;
   grid-template-columns: 1fr 1.6fr;
@@ -145,9 +145,7 @@
 
 .sector-legend__pct { font-weight: 600; color: var(--text-2); }
 
-.asset-chart {
-  padding: 20px;
-}
+.asset-chart { padding: 20px; }
 
 .chart-tabs {
   display: flex;
@@ -170,9 +168,7 @@
 }
 
 /* ── ScreeningTable ── */
-.screening-table-wrap {
-  padding: 0;
-}
+.screening-table-wrap { padding: 0; }
 
 .screening-table-header {
   display: flex;
@@ -191,9 +187,12 @@
   color: var(--primary);
 }
 
+.screening-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
 .screening-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 560px;   /* 모바일에서 가로 스크롤 */
 }
 
 .screening-table thead tr {
@@ -219,7 +218,6 @@
 }
 
 .screening-table tbody tr:last-child td { border-bottom: none; }
-
 .screening-table tbody tr:hover td { background: var(--bg); }
 
 .stock-name { font-weight: 600; }
@@ -244,8 +242,8 @@
   gap: 10px;
 }
 
-.change--up { color: var(--green); font-weight: 600; }
-.change--down { color: var(--red); font-weight: 600; }
+.change--up   { color: var(--green); font-weight: 600; }
+.change--down { color: var(--red);   font-weight: 600; }
 
 .signal-badge {
   display: inline-flex;
@@ -257,9 +255,9 @@
   white-space: nowrap;
 }
 
-.signal-badge--buy { background: var(--green-bg); color: var(--green); }
-.signal-badge--hold { background: var(--bg); color: var(--text-2); }
-.signal-badge--sell { background: var(--red-bg); color: var(--red); }
+.signal-badge--buy  { background: var(--green-bg); color: var(--green); }
+.signal-badge--hold { background: var(--bg);        color: var(--text-2); }
+.signal-badge--sell { background: var(--red-bg);    color: var(--red); }
 
 .action-btn {
   width: 26px;
@@ -275,3 +273,50 @@
 }
 
 .action-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* ── 모바일 반응형 ── */
+@media (max-width: 768px) {
+  /* 지수 카드: 4열 → 2×2 */
+  .index-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .index-card {
+    padding: 14px 16px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* 2번째 카드: 오른쪽 보더 제거 */
+  .index-card:nth-child(2) { border-right: none; }
+  /* 3,4번째 카드: 아래 보더 제거 */
+  .index-card:nth-child(3),
+  .index-card:nth-child(4) { border-bottom: none; }
+  /* 4번째 카드: 오른쪽 보더 제거 */
+  .index-card:nth-child(4) { border-right: none; }
+  /* 기존 last-child 오버라이드 */
+  .index-card:last-child { border-right: none; }
+
+  .index-card__value { font-size: 18px; }
+
+  /* 차트: 옆으로 → 위아래 */
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sector-chart {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 16px;
+  }
+
+  .asset-chart { padding: 16px; }
+
+  /* 시장 경고 */
+  .market-alert { padding: 12px 16px; }
+}
+
+@media (max-width: 480px) {
+  .index-card__value { font-size: 16px; }
+  .sector-chart__inner { flex-direction: column; align-items: flex-start; }
+}

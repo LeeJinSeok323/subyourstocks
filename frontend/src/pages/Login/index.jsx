@@ -13,12 +13,13 @@ function validatePassword(pw) {
 }
 
 /* ── 로그인 폼 ── */
-function LoginForm({ onError }) {
+function LoginForm() {
   const navigate = useNavigate();
-  const [form, setForm]     = useState({ username: '', password: '' });
-  const [showPw, setShowPw] = useState(false);
+  const [form, setForm]       = useState({ username: '', password: '' });
+  const [autoLogin, setAutoLogin] = useState(false);
+  const [showPw, setShowPw]   = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError]   = useState('');
+  const [error, setError]     = useState('');
 
   const handleChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -31,11 +32,11 @@ function LoginForm({ onError }) {
       const res  = await fetch('/api/auth/login', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(form),
+        body:    JSON.stringify({ ...form, autoLogin }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || '로그인에 실패했습니다.'); return; }
-      setAuth(data.token, data.username, data.role);
+      setAuth(data.token, data.username, data.role, autoLogin);
       navigate('/', { replace: true });
     } catch {
       setError('서버에 연결할 수 없습니다.');
@@ -72,6 +73,16 @@ function LoginForm({ onError }) {
           </button>
         </div>
       </div>
+
+      {/* 자동 로그인 체크박스 */}
+      <label className="login-remember">
+        <input
+          type="checkbox"
+          checked={autoLogin}
+          onChange={(e) => setAutoLogin(e.target.checked)}
+        />
+        <span>자동 로그인 (30일)</span>
+      </label>
 
       {error && <p className="login-error">{error}</p>}
 
