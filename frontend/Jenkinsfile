@@ -5,6 +5,10 @@ pipeline {
         disableConcurrentBuilds(abortPrevious: true)
     }
 
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -15,12 +19,14 @@ pipeline {
         }
 
         stage('Build Image') {
+            when { changeset "frontend/**" }
             steps {
                 sh 'docker build --no-cache -t stocker-frontend:latest ./frontend'
             }
         }
 
         stage('Deploy') {
+            when { changeset "frontend/**" }
             steps {
                 sh '''
                     docker network create stocker-net 2>/dev/null || true

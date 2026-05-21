@@ -13,6 +13,7 @@ pipeline {
 
         MYSQL_PASSWORD      = credentials('DB_PASSWORD')
         CLICKHOUSE_PASSWORD = credentials('clickhouse-password')
+        JWT_SECRET          = credentials('JWT_SECRET')
     }
 
     options {
@@ -33,12 +34,14 @@ pipeline {
         }
 
         stage('Build Image') {
+            when { changeset "backend/**" }
             steps {
                 sh 'docker build --no-cache -t stocker-backend:latest ./backend'
             }
         }
 
         stage('Deploy') {
+            when { changeset "backend/**" }
             steps {
                 sh '''
                     docker network create stocker-net 2>/dev/null || true
@@ -63,7 +66,8 @@ pipeline {
                         -e CLICKHOUSE_USER=${CLICKHOUSE_USER} \
                         -e CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD} \
                         -e SERVER_PORT=${SERVER_PORT} \
-                        -p 8082:8082 \
+                        -e JWT_SECRET=${JWT_SECRET} \
+                        -p 127.0.0.1:8082:8082 \
                         stocker-backend:latest
                 '''
             }
@@ -71,10 +75,7 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'stocker-backend 배포 완료'
-            build job: 'stocker-frontend', wait: false
-        }
+        success { echo 'stocker-backend 배포 완료' }
         failure { echo 'stocker-backend 배포 실패' }
     }
 }
