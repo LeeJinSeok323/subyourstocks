@@ -96,8 +96,10 @@ export default function DashboardGrid({ widgets, onReorder, onToggleLock }) {
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
   );
 
+  // visible: false 위젯 제외
+  const visibleWidgets = widgets.filter(w => w.visible !== false);
   // 잠기지 않은 위젯만 SortableContext에 등록 → 잠긴 위젯은 드롭 대상에서 완전 제외
-  const draggableIds = widgets.filter(w => !w.locked).map(w => w.id);
+  const draggableIds = visibleWidgets.filter(w => !w.locked).map(w => w.id);
 
   function handleDragEnd({ active, over }) {
     if (over && active.id !== over.id) {
@@ -113,7 +115,7 @@ export default function DashboardGrid({ widgets, onReorder, onToggleLock }) {
     >
       <SortableContext items={draggableIds} strategy={verticalListSortingStrategy}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {widgets.map(widget =>
+          {visibleWidgets.map(widget =>
             widget.locked
               ? <LockedWidget    key={widget.id} widget={widget} onToggleLock={onToggleLock} />
               : <DraggableWidget key={widget.id} widget={widget} onToggleLock={onToggleLock} />
