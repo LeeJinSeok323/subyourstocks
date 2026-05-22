@@ -11,12 +11,12 @@ import Admin       from './pages/Admin';
 import NotFound    from './pages/NotFound';
 import { getToken, getRole } from './hooks/useAuth';
 
-/** JWT 없으면 /login 으로 리다이렉트 */
+// eslint-disable-next-line react-refresh/only-export-components
 function RequireAuth({ children }) {
   return getToken() ? children : <Navigate to="/login" replace />;
 }
 
-/** ADMIN role 아니면 대시보드로 리다이렉트 */
+// eslint-disable-next-line react-refresh/only-export-components
 function RequireAdmin({ children }) {
   if (!getToken()) return <Navigate to="/login" replace />;
   if (getRole() !== 'ADMIN') return <Navigate to="/" replace />;

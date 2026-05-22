@@ -20,9 +20,7 @@ public class AlertController {
     /** 현재 알림 설정 조회 */
     @GetMapping("/{ticker}")
     public Object getAlert(@PathVariable String ticker, Authentication auth) {
-        return alertService.getAlert(auth.getName(), ticker)
-            .map(data -> Map.of("active", true, "options", data))
-            .orElse(Map.of("active", false));
+        return alertService.getAlert(auth.getName(), ticker);
     }
 
     /** 알림 저장 (ON + 옵션) */

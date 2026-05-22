@@ -103,7 +103,9 @@ public class AlertService {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        Number key = keyHolder.getKey();
+        if (key == null) throw new RuntimeException("alarm INSERT 실패: 생성된 키 없음");
+        return key.longValue();
     }
 
     private Long getUserId(String username) {

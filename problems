@@ -1,0 +1,41 @@
+D:\CUMILIA\subyourstocks\backend\src\main\resources\application.yml
+Warning:(4, 7) Cannot resolve configuration property 'spring.datasource.mysql.jdbc-url'
+Warning:(5, 7) Cannot resolve configuration property 'spring.datasource.mysql.username'
+Warning:(6, 7) Cannot resolve configuration property 'spring.datasource.mysql.password'
+Warning:(7, 7) Cannot resolve configuration property 'spring.datasource.mysql.driver-class-name'
+Warning:(9, 9) Cannot resolve configuration property 'spring.datasource.mysql.hikari.maximum-pool-size'
+Warning:(10, 9) Cannot resolve configuration property 'spring.datasource.mysql.hikari.minimum-idle'
+Warning:(11, 9) Cannot resolve configuration property 'spring.datasource.mysql.hikari.connection-timeout'
+Warning:(12, 9) Cannot resolve configuration property 'spring.datasource.mysql.hikari.idle-timeout'
+Warning:(13, 9) Cannot resolve configuration property 'spring.datasource.mysql.hikari.max-lifetime'
+Warning:(15, 7) Cannot resolve configuration property 'spring.datasource.clickhouse.jdbc-url'
+Warning:(16, 7) Cannot resolve configuration property 'spring.datasource.clickhouse.username'
+Warning:(17, 7) Cannot resolve configuration property 'spring.datasource.clickhouse.password'
+Warning:(18, 7) Cannot resolve configuration property 'spring.datasource.clickhouse.driver-class-name'
+Warning:(20, 9) Cannot resolve configuration property 'spring.datasource.clickhouse.hikari.maximum-pool-size'
+Warning:(21, 9) Cannot resolve configuration property 'spring.datasource.clickhouse.hikari.minimum-idle'
+Warning:(22, 9) Cannot resolve configuration property 'spring.datasource.clickhouse.hikari.connection-timeout'
+D:\CUMILIA\subyourstocks\frontend\src\router.jsx
+Error:(15, 10) ESLint: Fast refresh only works when a file only exports components. Move your component(s) to a separate file. If all exports are HOCs, add them to the `extraHOCs` option. (react-refresh/only-export-components)
+Error:(20, 10) ESLint: Fast refresh only works when a file only exports components. Move your component(s) to a separate file. If all exports are HOCs, add them to the `extraHOCs` option. (react-refresh/only-export-components)
+D:\CUMILIA\subyourstocks\backend\src\main\java\com\stocker\alert\AlertController.java
+Error:(24, 14) Cannot resolve method 'map' in 'Map'
+D:\CUMILIA\subyourstocks\backend\src\main\java\com\stocker\alert\AlertService.java
+Warning:(39, 14) No data sources are configured to run this SQL and provide advanced code assistance. Disable this inspection via problem menu (Alt+Enter).
+Error:(39, 37) Unable to resolve table 'alarm_dtl'
+Warning:(57, 22) No data sources are configured to run this SQL and provide advanced code assistance. Disable this inspection via problem menu (Alt+Enter).
+Error:(57, 34) Unable to resolve table 'alarm_dtl'
+Warning:(62, 22) No data sources are configured to run this SQL and provide advanced code assistance. Disable this inspection via problem menu (Alt+Enter).
+Error:(62, 34) Unable to resolve table 'alarm_dtl'
+Warning:(75, 14) No data sources are configured to run this SQL and provide advanced code assistance. Disable this inspection via problem menu (Alt+Enter).
+Error:(75, 26) Unable to resolve table 'alarm'
+Warning:(84, 14) No data sources are configured to run this SQL and provide advanced code assistance. Disable this inspection via problem menu (Alt+Enter).
+Error:(84, 29) Unable to resolve table 'alarm'
+Warning:(98, 18) No data sources are configured to run this SQL and provide advanced code assistance. Disable this inspection via problem menu (Alt+Enter).
+Error:(98, 30) Unable to resolve table 'alarm'
+Warning:(106, 35) Method invocation 'longValue' may produce 'NullPointerException'
+D:\CUMILIA\subyourstocks\frontend\src\pages\Screening\index.jsx
+Error:(256, 25) ESLint: Error: Cannot create components during render (react-hooks/static-components)
+Error:(259, 28) ESLint: Error: Cannot create components during render (react-hooks/static-components)
+D:\CUMILIA\subyourstocks\frontend\src\pages\Stock\index.jsx
+Warning:(302, 20) The tag is marked as deprecated

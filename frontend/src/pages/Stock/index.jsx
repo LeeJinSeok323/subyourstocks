@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Bell } from 'lucide-react';
 import {
@@ -79,6 +79,49 @@ function VolumeTooltip({ active, payload }) {
   );
 }
 
+/* ── 텔레그램 등록 팝업 ── */
+function TelegramRegisterPopup({ onRegistered, onClose }) {
+  const [link, setLink] = useState(null);
+  const pollRef = useRef(null);
+
+  useEffect(() => {
+    authFetch('/api/telegram/link-token', { method: 'POST' })
+      .then(r => r.json())
+      .then(d => setLink(d.link))
+      .catch(() => {});
+
+    pollRef.current = setInterval(() => {
+      authFetch('/api/telegram/status')
+        .then(r => r.json())
+        .then(d => { if (d.registered) { clearInterval(pollRef.current); onRegistered(); } })
+        .catch(() => {});
+    }, 3000);
+
+    return () => clearInterval(pollRef.current);
+  }, [onRegistered]);
+
+  return (
+    <>
+      <div className="alert-backdrop" onClick={onClose} />
+      <div className="tg-register-popup">
+        <div className="tg-register-popup__title">텔레그램 연결 필요</div>
+        <p className="tg-register-popup__desc">
+          알림을 받으려면 텔레그램 봇을 등록해야 해요.<br />
+          아래 버튼을 눌러 봇에서 시작을 눌러주세요.
+        </p>
+        {link ? (
+          <a className="tg-register-popup__btn" href={link} target="_blank" rel="noreferrer">
+            텔레그램에서 등록하기
+          </a>
+        ) : (
+          <div className="tg-register-popup__loading">링크 생성 중...</div>
+        )}
+        <p className="tg-register-popup__hint">등록 완료 시 자동으로 닫힙니다.</p>
+      </div>
+    </>
+  );
+}
+
 /* ── 알림 팝오버 ── */
 function AlertPopover({ enabledTypes, onToggle, onTurnOff, onClose }) {
   return (
@@ -116,10 +159,12 @@ function AlertPopover({ enabledTypes, onToggle, onTurnOff, onClose }) {
 export default function StockPage() {
   const { ticker } = useParams();
   const navigate   = useNavigate();
-  const [period, setPeriod]       = useState('3개월');
-  const [alertOn, setAlertOn]       = useState(false);
-  const [popoverOpen, setPopover]   = useState(false);
+  const [period, setPeriod]             = useState('3개월');
+  const [alertOn, setAlertOn]           = useState(false);
+  const [popoverOpen, setPopover]       = useState(false);
   const [enabledTypes, setEnabledTypes] = useState(DEFAULT_TYPES);
+  const [tgRegistered, setTgRegistered] = useState(true);
+  const [tgPopup, setTgPopup]           = useState(false);
 
   const meta      = MOCK_META[ticker] ?? { name: ticker, price: 100, prevClose: 95 };
   const change    = meta.price - meta.prevClose;
@@ -137,7 +182,7 @@ export default function StockPage() {
   const pPad        = (pMax - pMin) * 0.08;
   const tickInterval = Math.max(1, Math.floor(data.length / 5));
 
-  /* 서버에서 알림 상태 로드 */
+  /* 서버에서 알림 상태 + 텔레그램 등록 여부 로드 */
   useEffect(() => {
     authFetch(`/api/alerts/${ticker}`)
       .then(r => r.json())
@@ -147,6 +192,11 @@ export default function StockPage() {
           setEnabledTypes(d.types ?? DEFAULT_TYPES);
         }
       })
+      .catch(() => {});
+
+    authFetch('/api/telegram/status')
+      .then(r => r.json())
+      .then(d => setTgRegistered(d.registered))
       .catch(() => {});
   }, [ticker]);
 
@@ -163,10 +213,20 @@ export default function StockPage() {
     if (alertOn) {
       setPopover(v => !v);
     } else {
+      if (!tgRegistered) { setTgPopup(true); return; }
       setAlertOn(true);
       setPopover(true);
       saveAlert(enabledTypes);
     }
+  };
+
+  /* 텔레그램 등록 완료 후 */
+  const handleTgRegistered = () => {
+    setTgRegistered(true);
+    setTgPopup(false);
+    setAlertOn(true);
+    setPopover(true);
+    saveAlert(enabledTypes);
   };
 
   /* 유형 토글 */
@@ -209,6 +269,12 @@ export default function StockPage() {
             {alertOn ? <Bell size={14} fill="currentColor" /> : <Bell size={14} />}
             {alertOn ? '알림 ON' : '알림 설정'}
           </button>
+          {tgPopup && (
+            <TelegramRegisterPopup
+              onRegistered={handleTgRegistered}
+              onClose={() => setTgPopup(false)}
+            />
+          )}
           {alertOn && popoverOpen && (
             <AlertPopover
               enabledTypes={enabledTypes}

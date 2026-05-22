@@ -40,6 +40,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // 로그인 / 회원가입신청은 인증 없이 허용
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/telegram/webhook").permitAll()
                 // 관리자 API: ADMIN role (@PreAuthorize 로 이중 보호)
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 // 그 외 모든 API: JWT 필요

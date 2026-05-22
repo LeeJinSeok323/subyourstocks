@@ -29,7 +29,9 @@ jwt:
   expiration: 86400000   # 24시간 (ms)
 
 telegram:
-  bot-token: ${TELEGRAM_BOT_TOKEN}
+  bot-token:     ${TELEGRAM_BOT_TOKEN}
+  bot-username:  ${TELEGRAM_BOT_USERNAME}
+  server-url:    ${SERVER_DOMAIN:}
 
 logging:
   level:

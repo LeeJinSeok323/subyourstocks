@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, RotateCcw, TrendingUp, BarChart2, SlidersHorizontal, X } from 'lucide-react';
+import { authFetch } from '../../hooks/useAuth';
 import './screening.css';
 
 /* ── Preset 정의 ── */
@@ -16,18 +17,15 @@ const DEFAULT_PARAMS = {
   volume: { days: 5,  minVolumeRatio: 3.0,    limit: 50 },
 };
 
-/* ── 샘플 Mock 데이터 ── */
-const MOCK_ROWS = [
-  { ticker: 'NVDA',   name: 'NVIDIA Corp.',      market: 'us', change_pct: 31.4, volume_ratio: 5.2, last_date: '2026-05-20', tags: ['price','volume'] },
-  { ticker: 'AMD',    name: 'Advanced Micro',    market: 'us', change_pct: 22.7, volume_ratio: 4.1, last_date: '2026-05-20', tags: ['price','volume'] },
-  { ticker: 'TSLA',   name: 'Tesla Inc.',         market: 'us', change_pct: 18.3, volume_ratio: 2.1, last_date: '2026-05-19', tags: ['price'] },
-  { ticker: '005930', name: '삼성전자',            market: 'kr', change_pct: 12.1, volume_ratio: 3.8, last_date: '2026-05-20', tags: ['price','volume'] },
-  { ticker: '000660', name: 'SK하이닉스',          market: 'kr', change_pct:  9.4, volume_ratio: 4.2, last_date: '2026-05-20', tags: ['price','volume'] },
-  { ticker: 'PLTR',   name: 'Palantir Tech.',     market: 'us', change_pct: 15.9, volume_ratio: 6.8, last_date: '2026-05-20', tags: ['price','volume'] },
-  { ticker: 'MSTR',   name: 'MicroStrategy',      market: 'us', change_pct: 14.2, volume_ratio: 3.9, last_date: '2026-05-18', tags: ['price','volume'] },
-  { ticker: 'COIN',   name: 'Coinbase Global',    market: 'us', change_pct:  9.1, volume_ratio: 7.3, last_date: '2026-05-20', tags: ['volume'] },
-  { ticker: '035420', name: 'NAVER',              market: 'kr', change_pct:  7.2, volume_ratio: 5.6, last_date: '2026-05-20', tags: ['volume'] },
-];
+/* 6자리 숫자 → 국내, 그 외 → 해외 */
+const inferMarket = ticker => /^\d{6}$/.test(ticker) ? 'kr' : 'us';
+
+/* ── 정렬 아이콘 ── */
+function SortIcon({ col, sortKey, sortDir }) {
+  return sortKey === col
+    ? <span style={{ color: 'var(--primary)' }}>{sortDir === 'asc' ? ' ↑' : ' ↓'}</span>
+    : <span style={{ opacity: 0.3 }}> ↕</span>;
+}
 
 /* ── 숫자 입력: 포커스 시 전체 선택, 빈값 → 0, 앞자리 0 제거 ── */
 function NumInput({ value, onChange, isFloat = false, ...props }) {
@@ -129,10 +127,53 @@ export default function Screening() {
   const navigate = useNavigate();
   const [activePresets, setActivePresets] = useState(new Set(['price', 'volume']));
   const [params, setParams]     = useState(DEFAULT_PARAMS);
-  const [market, setMarket]     = useState('all'); // 'all' | 'us' | 'kr'
+  const [market, setMarket]     = useState('all');
   const [advOpen, setAdvOpen]   = useState(false);
   const [sortKey, setSortKey]   = useState('change_pct');
   const [sortDir, setSortDir]   = useState('desc');
+  const [rawRows, setRawRows]   = useState([]);
+  const [loading, setLoading]   = useState(false);
+
+  const doFetch = useCallback(async (presets, p) => {
+    if (presets.size === 0) { setRawRows([]); return; }
+    setLoading(true);
+    const merged = {};
+    try {
+      if (presets.has('price')) {
+        const { days, minChangePercent, limit } = p.price;
+        const res  = await authFetch(`/api/screening/price?days=${days}&minChangePercent=${minChangePercent}&limit=${limit}`);
+        const data = await res.json();
+        (Array.isArray(data) ? data : []).forEach(r => {
+          merged[r.ticker] = { ...merged[r.ticker], ticker: r.ticker,
+            change_pct: r.change_percent ?? 0, last_date: r.last_date,
+            tags: [...(merged[r.ticker]?.tags ?? []), 'price'] };
+        });
+      }
+      if (presets.has('volume')) {
+        const { days, minVolumeRatio, limit } = p.volume;
+        const res  = await authFetch(`/api/screening/volume?days=${days}&minVolumeRatio=${minVolumeRatio}&limit=${limit}`);
+        const data = await res.json();
+        (Array.isArray(data) ? data : []).forEach(r => {
+          merged[r.ticker] = { ...merged[r.ticker], ticker: r.ticker,
+            volume_ratio: r.volume_ratio ?? 0, last_date: r.last_date,
+            tags: [...(merged[r.ticker]?.tags ?? []), 'volume'] };
+        });
+      }
+      setRawRows(Object.values(merged).map(r => ({
+        ...r,
+        change_pct:   r.change_pct   ?? 0,
+        volume_ratio: r.volume_ratio ?? 0,
+        market: inferMarket(r.ticker),
+      })));
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // 프리셋 토글 시 자동 재조회
+  useEffect(() => { doFetch(activePresets, params); }, [activePresets]); // eslint-disable-line
 
   const togglePreset = useCallback((id) => {
     setActivePresets(prev => {
@@ -147,9 +188,11 @@ export default function Screening() {
   }, []);
 
   const handleReset = () => {
-    setActivePresets(new Set(['price', 'volume']));
+    const defaultPresets = new Set(['price', 'volume']);
+    setActivePresets(defaultPresets);
     setParams(DEFAULT_PARAMS);
     setMarket('all');
+    doFetch(defaultPresets, DEFAULT_PARAMS);
   };
 
   const handleSort = (key) => {
@@ -157,15 +200,9 @@ export default function Screening() {
     else { setSortKey(key); setSortDir('desc'); }
   };
 
-  const rows = MOCK_ROWS
-    .filter(r => r.tags.some(t => activePresets.has(t)))
+  const rows = rawRows
     .filter(r => market === 'all' || r.market === market)
     .sort((a, b) => (sortDir === 'asc' ? 1 : -1) * (a[sortKey] - b[sortKey]));
-
-  const SortIcon = ({ col }) =>
-    sortKey === col
-      ? <span style={{ color: 'var(--primary)' }}>{sortDir === 'asc' ? ' ↑' : ' ↓'}</span>
-      : <span style={{ opacity: 0.3 }}> ↕</span>;
 
   return (
     <div>
@@ -182,8 +219,8 @@ export default function Screening() {
           <button className="scr-btn" onClick={handleReset}>
             <RotateCcw size={14} /> 초기화
           </button>
-          <button className="scr-btn scr-btn--primary">
-            <Search size={14} /> 검색
+          <button className="scr-btn scr-btn--primary" onClick={() => doFetch(activePresets, params)} disabled={loading}>
+            <Search size={14} /> {loading ? '조회 중...' : '검색'}
           </button>
         </div>
       </div>
@@ -229,7 +266,6 @@ export default function Screening() {
         <div className="scr-results__bar">
           <span className="scr-results__count">
             결과 <strong>{rows.length}건</strong>
-            <span style={{ marginLeft: 6, fontSize: 11, color: 'var(--text-3)' }}>(샘플 데이터)</span>
           </span>
           <select className="scr-select" value={`${sortKey}_${sortDir}`} onChange={e => {
             const [k, d] = e.target.value.split('_');
@@ -244,6 +280,8 @@ export default function Screening() {
 
         {activePresets.size === 0 ? (
           <div className="scr-empty">조건을 하나 이상 선택하세요.</div>
+        ) : loading ? (
+          <div className="scr-empty">조회 중...</div>
         ) : rows.length === 0 ? (
           <div className="scr-empty">조건에 맞는 종목이 없습니다.</div>
         ) : (
@@ -253,10 +291,10 @@ export default function Screening() {
                 <tr>
                   <th>종목</th>
                   <th className={sortKey === 'change_pct' ? 'sorted' : ''} onClick={() => handleSort('change_pct')}>
-                    변동률<SortIcon col="change_pct" />
+                    변동률<SortIcon col="change_pct" sortKey={sortKey} sortDir={sortDir} />
                   </th>
                   <th className={sortKey === 'volume_ratio' ? 'sorted' : ''} onClick={() => handleSort('volume_ratio')}>
-                    거래량 배율<SortIcon col="volume_ratio" />
+                    거래량 배율<SortIcon col="volume_ratio" sortKey={sortKey} sortDir={sortDir} />
                   </th>
                   <th>최종일</th>
                   <th>조건</th>

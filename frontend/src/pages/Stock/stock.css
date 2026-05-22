@@ -242,6 +242,62 @@
 .stock-info-item__value { font-size: 15px; font-weight: 700; color: var(--text-1); }
 
 /* 반응형 */
+/* ── 텔레그램 등록 팝업 ── */
+.tg-register-popup {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 200;
+  width: 280px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 16px 14px;
+  box-shadow: var(--shadow-md);
+}
+
+.tg-register-popup__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 8px;
+}
+
+.tg-register-popup__desc {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.tg-register-popup__btn {
+  display: block;
+  text-align: center;
+  padding: 9px 0;
+  background: #229ED9;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.tg-register-popup__btn:hover { opacity: 0.88; }
+
+.tg-register-popup__loading {
+  font-size: 12px;
+  color: var(--text-3);
+  text-align: center;
+  padding: 8px 0;
+}
+
+.tg-register-popup__hint {
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: center;
+}
+
 @media (max-width: 768px) {
   .stock-info-grid { grid-template-columns: repeat(2, 1fr); }
   .stock-info-item:nth-child(4n) { border-right: 1px solid var(--border); }
