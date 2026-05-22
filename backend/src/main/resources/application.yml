@@ -28,6 +28,9 @@ jwt:
   secret: ${JWT_SECRET}
   expiration: 86400000   # 24시간 (ms)
 
+telegram:
+  bot-token: ${TELEGRAM_BOT_TOKEN}
+
 logging:
   level:
     com.stocker: DEBUG

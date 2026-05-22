@@ -14,6 +14,7 @@ pipeline {
         MYSQL_PASSWORD      = credentials('DB_PASSWORD')
         CLICKHOUSE_PASSWORD = credentials('clickhouse-password')
         JWT_SECRET          = credentials('JWT_SECRET')
+        TELEGRAM_BOT_TOKEN  = credentials('TELEGRAM_BOT_TOKEN')
     }
 
     options {
@@ -67,6 +68,7 @@ pipeline {
                         -e CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD} \
                         -e SERVER_PORT=${SERVER_PORT} \
                         -e JWT_SECRET=${JWT_SECRET} \
+                        -e TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN} \
                         -p 127.0.0.1:8082:8082 \
                         stocker-backend:latest
                 '''

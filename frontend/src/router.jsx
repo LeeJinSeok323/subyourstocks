@@ -5,6 +5,7 @@ import Screening   from './pages/Screening';
 import Watchlist   from './pages/Watchlist';
 import Portfolio   from './pages/Portfolio';
 import MarketTrend from './pages/MarketTrend';
+import Stock       from './pages/Stock';
 import Login       from './pages/Login';
 import Admin       from './pages/Admin';
 import NotFound    from './pages/NotFound';
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       { path: 'watchlist',  element: <Watchlist /> },
       { path: 'portfolio',  element: <Portfolio /> },
       { path: 'market',     element: <MarketTrend /> },
+      { path: 'stock/:ticker', element: <Stock /> },
       // 관리자 전용
       { path: 'admin',      element: <RequireAdmin><Admin /></RequireAdmin> },
     ],
